@@ -1,10 +1,10 @@
 import React from 'react';
-import HeroSection from '../travel/HeroSection';
+import HeroSection from '../layout/HeroSection';
 import HotelWidget from '../travel/HotelWidget';
 import DestinationCarousel from '../travel/DestinationCarousel';
 import FeaturedDestinations from '../travel/FeaturedDestinations';
 import TravelInspiration from '../travel/TravelInspiration';
-import SubscribeForm from '../ui/SubscribeForm';
+import SubscribeForm from '../components/SubscribeForm';
 
 const Home = () => {
   return (

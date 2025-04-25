@@ -1,5 +1,5 @@
 import React from 'react';
-import FlightWidget from './FlightWidget';
+import FlightWidget from '../travel/FlightWidget';
 
 const HeroSection = () => {
   return (

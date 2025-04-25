@@ -1,12 +1,27 @@
-import React from 'react'
-import Home from './pages/Home'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navigation from './components/Navigation';
+import Footer from './components/Footer';
+import Home from './pages/Home';
+import Blogs from './pages/Blogs';
+import Resources from './pages/Resources';
+import './styles/App.css';
 
 function App() {
   return (
-    <div className="min-h-screen bg-white">
-      <Home />
+    <Router>
+      <div className="min-h-screen flex flex-col">
+        <Navigation />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/resources" element={<Resources />} />
+          </Routes>
+        </main>
+        <Footer />
       </div>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;
