@@ -1,23 +1,21 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navigation from './components/Navigation';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import Blogs from './pages/Blogs';
-import Resources from './pages/Resources';
-import './styles/App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navigation from "./components/Navigation";
+import Footer from "./components/Footer";
+import Home from "./pages/Home";
+import Blogs from "./pages/Blogs";
+import Resources from "./pages/Resources";
+import "./styles/App.css";
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen">
         <Navigation />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/blogs" element={<Blogs />} />
-            <Route path="/resources" element={<Resources />} />
-          </Routes>
-        </main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/resources" element={<Resources />} />
+        </Routes>
         <Footer />
       </div>
     </Router>
