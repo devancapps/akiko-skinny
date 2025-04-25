@@ -8,7 +8,7 @@ import SubscribeForm from '../components/SubscribeForm';
 
 const Home = () => {
   return (
-    <main className="min-h-screen text-gray-900">
+    <main className="min-h-screen bg-white text-gray-900">
       <HeroSection />
       <FeaturedDestinations />
       <TravelInspiration />
