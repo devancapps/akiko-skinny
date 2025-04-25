@@ -184,15 +184,28 @@ const resourceCategories = {
   ]
 };
 
+const SectionTitle = ({ title }: { title: string }) => (
+  <div className="relative mb-12 group">
+    <h2 className="text-3xl font-bold text-gray-900 inline-block">
+      {title}
+      <div className="h-1 w-0 group-hover:w-full bg-blue-500 transition-all duration-300 ease-out"></div>
+    </h2>
+    <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-1 h-12 bg-blue-500 transform -skew-y-45"></div>
+  </div>
+);
+
 const Resources = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">Travel Resources</h1>
-        <div className="space-y-16">
+        <h1 className="text-5xl font-bold text-gray-900 mb-16 text-center relative overflow-hidden">
+          Travel Resources
+          <div className="h-1 w-32 bg-blue-500 mx-auto mt-4 animate-pulse"></div>
+        </h1>
+        <div className="space-y-24">
           {Object.entries(resourceCategories).map(([category, resources]) => (
-            <section key={category}>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">{category}</h2>
+            <section key={category} className="scroll-mt-16">
+              <SectionTitle title={category} />
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {resources.map((resource) => (
                   <ResourceCard
