@@ -35,7 +35,7 @@ const FlightWidget = () => {
   }, []);
 
   return (
-    <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-6 w-full max-w-4xl mx-auto">
+    <div className="bg-white/75 backdrop-blur-sm rounded-lg shadow-lg p-6 w-full max-w-4xl mx-auto">
       <div id="flight-widget-container" className="min-h-[300px] flex items-center justify-center">
         <div className="text-gray-500">Loading flight search...</div>
       </div>

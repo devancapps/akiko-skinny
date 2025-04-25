@@ -10,7 +10,7 @@ const HotelWidget = () => {
 
     const script = document.createElement('script');
     script.id = 'tp-hotel-widget';
-    script.src = "https://tp.media/content?currency=USD&trs=409664&shmarker=624965&locale=en&powered_by=true&border_radius=0&plain=true&color_button=%232681ff&color_button_text=%23ffffff&color_border=%232681ff&promo_id=4132&campaign_id=101";
+    script.src = "https://tp.media/content?currency=USD&trs=409664&shmarker=624965&locale=en&powered_by=true&border_radius=8&plain=true&color_button=%232681ff&color_button_text=%23ffffff&color_border=%232681ff&promo_id=4132&campaign_id=101";
     script.async = true;
     script.charset = "utf-8";
     
@@ -35,9 +35,9 @@ const HotelWidget = () => {
   }, []);
 
   return (
-    <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-6 w-full max-w-4xl mx-auto">
+    <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 w-full max-w-3xl mx-auto border border-white/10">
       <div id="hotel-widget-container" className="min-h-[300px] flex items-center justify-center">
-        <div className="text-gray-500">Loading hotel search...</div>
+        <div className="text-white/60">Loading hotel search...</div>
       </div>
     </div>
   );
