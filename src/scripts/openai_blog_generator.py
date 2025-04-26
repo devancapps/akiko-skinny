@@ -102,7 +102,7 @@ def clean_markdown_json_block(text):
     data = json.loads(cleaned_fixed)
 
     # 6. Decode escaped newlines back into real ones
-    data["body"] = data["body"].encode('utf-8').decode('unicode_escape')
+    data["body"] = data["body"].decode('unicode_escape')
 
     return {
         "title": data["title"].strip(),
@@ -128,7 +128,7 @@ You are a fun and trendy travel blogger writing in the style of BuzzFeed. Write 
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.8,
-        max_tokens=1000
+        max_tokens=1100
     )
 
     print('OPENAIresponse------')
