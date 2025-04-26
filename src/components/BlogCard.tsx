@@ -1,5 +1,4 @@
-
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 interface BlogCardProps {
   title: string;
@@ -20,7 +19,7 @@ const BlogCard: React.FC<BlogCardProps> = ({
   author,
   date,
   readTime,
-  tags = []
+  tags = [],
 }) => {
   return (
     <article className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
@@ -38,7 +37,7 @@ const BlogCard: React.FC<BlogCardProps> = ({
           <div className="flex items-center text-sm text-gray-500 mb-4">
             <span>{author}</span>
             <span className="mx-2">•</span>
-            <span>{date}</span>
+            <span>{new Date(date).toLocaleDateString()}</span>
             <span className="mx-2">•</span>
             <span>{readTime} read</span>
           </div>
@@ -64,4 +63,4 @@ const BlogCard: React.FC<BlogCardProps> = ({
   );
 };
 
-export default BlogCard; 
+export default BlogCard;
