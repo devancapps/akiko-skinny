@@ -21,7 +21,7 @@ if os.getenv("GITHUB_ACTIONS"):
     openai_api_key = os.getenv("OPENAI_API_KEY")
     pexels_api_key = os.getenv("PEXELS_API_KEY")
     firebase_project_id = os.getenv("FIREBASE_PROJECT_ID")
-    firebase_private_key = os.getenv("FIREBASE_PRIVATE_KEY")
+    firebase_private_key = os.getenv("FIREBASE_PRIVATE_KEY").replace("\\n", "\n")
     firebase_client_email = os.getenv("FIREBASE_CLIENT_EMAIL")
 else:
     # Running locally
@@ -29,7 +29,7 @@ else:
     openai_api_key = os.getenv("OPENAI_API_KEY")
     pexels_api_key = os.getenv("PEXELS_API_KEY")
     firebase_project_id = os.getenv("FIREBASE_PROJECT_ID")
-    firebase_private_key = os.getenv("FIREBASE_PRIVATE_KEY")
+    firebase_private_key = os.getenv("FIREBASE_PRIVATE_KEY").replace("\\n", "\n")
     firebase_client_email = os.getenv("FIREBASE_CLIENT_EMAIL")
 
 print('PEXELS_API_KEY', pexels_api_key)
