@@ -10,6 +10,7 @@ import openai
 import re
 import firebase_admin
 import json
+import sys
 from slugify import slugify
 from datetime import datetime
 from dotenv import load_dotenv
@@ -216,4 +217,5 @@ try:
 
 except Exception as e:
     print(f"An error occurred: {e}")
+    sys.exit(1)  # Exit with a non-zero status to indicate failure
 
