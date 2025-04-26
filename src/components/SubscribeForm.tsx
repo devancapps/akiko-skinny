@@ -1,108 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const SubscribeForm = () => {
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState('');
-  const [isVisible, setIsVisible] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      {
-        threshold: 0.1
-      }
-    );
-
-    const element = document.getElementById('newsletter-form');
-    if (element) {
-      observer.observe(element);
-    }
-
-    return () => {
-      if (element) {
-        observer.unobserve(element);
-      }
-    };
-  }, []);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Add your newsletter subscription logic here
-    setStatus('Thank you for subscribing!');
+    if (!email) {
+      setError('Please enter your email address');
+      return;
+    }
+    // Here you would typically send the email to your backend
+    console.log('Subscribing email:', email);
+    setIsSubscribed(true);
     setEmail('');
   };
 
+  useEffect(() => {
+    if (isSubscribed) {
+      const timer = setTimeout(() => {
+        setIsSubscribed(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSubscribed]);
+
   return (
-    <div className="relative w-full py-24">
-      {/* Background Image */}
-      <div className="absolute inset-0 overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80"
-          alt="Friends celebrating"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/75 via-blue-500/70 to-indigo-600/75" />
-      </div>
-
-      {/* Form Container */}
-      <div 
-        id="newsletter-form"
-        className={`relative z-10 w-full max-w-md mx-auto p-8 rounded-2xl shadow-2xl 
-                   bg-white/10 backdrop-blur-lg
-                   transform transition-all duration-1000 ease-out
-                   ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-      >
-        <div className={`transform transition-all duration-700 delay-300 ease-out
-                        ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <h2 className="text-3xl font-bold mb-6 text-white">Join Our Travel Community</h2>
-          <p className="text-blue-50 mb-6">Get exclusive deals and insider tips for your next adventure.</p>
+    <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl mx-auto">
+      <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">
+        Stay Updated with Travel Deals
+      </h2>
+      <p className="text-gray-600 mb-8 text-center">
+        Subscribe to our newsletter and never miss out on exclusive travel offers and destination guides.
+      </p>
+      
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
+        <div className="flex-1">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email address"
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </div>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className={`relative transform transition-all duration-700 delay-500 ease-out
-                          ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-              className="w-full px-4 py-3 rounded-lg bg-white/20 backdrop-blur-sm border border-white/30 
-                       text-white placeholder-blue-100 
-                       focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent 
-                       transition-all duration-300"
-            />
-          </div>
-          <button
-            type="submit"
-            className={`w-full px-6 py-3 text-blue-600 bg-white rounded-lg font-semibold 
-                     transform transition-all duration-700 delay-700 ease-out hover:scale-[1.02] hover:shadow-lg 
-                     active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2
-                     ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-          >
-            Subscribe Now
-          </button>
-        </form>
-        
-        {status && (
-          <div className="mt-4 text-sm text-white text-center animate-fade-in">
-            {status}
-          </div>
-        )}
+        <button
+          type="submit"
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+        >
+          Subscribe
+        </button>
+      </form>
 
-        {/* Decorative elements */}
-        <div className="absolute -top-6 -right-6 w-12 h-12 rounded-full bg-blue-300/30 backdrop-blur-sm 
-                      transform transition-all duration-1000 delay-300
-                      ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}" />
-        <div className="absolute -bottom-8 -left-8 w-16 h-16 rounded-full bg-indigo-400/20 backdrop-blur-sm
-                      transform transition-all duration-1000 delay-500
-                      ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}" />
-      </div>
+      {isSubscribed && (
+        <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-lg text-center">
+          Thank you for subscribing! You'll receive our next newsletter.
+        </div>
+      )}
     </div>
   );
 };

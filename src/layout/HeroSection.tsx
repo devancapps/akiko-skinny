@@ -1,4 +1,4 @@
-import React from 'react';
+
 import FlightWidget from '../travel/FlightWidget';
 
 const HeroSection = () => {

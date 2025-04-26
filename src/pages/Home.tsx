@@ -1,4 +1,4 @@
-import React from 'react';
+
 import HeroSection from '../layout/HeroSection';
 import HotelWidget from '../travel/HotelWidget';
 import DestinationCarousel from '../travel/DestinationCarousel';

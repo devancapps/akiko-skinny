@@ -1,4 +1,4 @@
-import React from 'react';
+
 import DestinationCard from './DestinationCard';
 
 const destinations = [
