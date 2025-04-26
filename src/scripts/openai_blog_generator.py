@@ -16,6 +16,8 @@ from datetime import datetime
 from dotenv import load_dotenv
 from firebase_admin import credentials, firestore
 
+print(f"🛠 Python version: {sys.version}")
+
 # Load environment variables
 if os.getenv("GITHUB_ACTIONS"):
     # Running in GitHub Actions
