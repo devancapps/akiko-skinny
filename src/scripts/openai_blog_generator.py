@@ -101,8 +101,8 @@ def clean_markdown_json_block(text):
     # 5. Parse the result
     data = json.loads(cleaned_fixed)
 
-    # 6. Decode escaped newlines back into real ones
-    data["body"] = data["body"].decode('unicode_escape')
+    # 6. Replace escaped newlines
+    data["body"] = data["body"].replace('\\n', '\n')
 
     return {
         "title": data["title"].strip(),
