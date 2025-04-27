@@ -3,7 +3,7 @@ name: Run OpenAI Blog Generator
 on:
   workflow_dispatch:
   schedule:
-    - cron: "58 1 * * *" # 2 AM UTC is 8 PM Central Time
+    - cron: "30 5 * * *" # 5:30 AM UTC is 12:30 AM Central Time
 
 jobs:
   run-script:
