@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import BlogCard from "../components/BlogCard";
+import BlogModal from "../components/BlogModal";
 import { getBlogPosts, BlogPost } from "../services/blogService";
 
 const Blogs = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedBlog, setSelectedBlog] = useState<BlogPost | null>(null);
 
   useEffect(() => {
     const fetchBlogPosts = async () => {
@@ -22,6 +24,14 @@ const Blogs = () => {
 
     fetchBlogPosts();
   }, []);
+
+  const openModal = (blog: BlogPost) => {
+    setSelectedBlog(blog);
+  };
+
+  const closeModal = () => {
+    setSelectedBlog(null);
+  };
 
   if (loading) {
     return (
@@ -65,20 +75,29 @@ const Blogs = () => {
         <h1 className="text-4xl font-bold mb-8 text-gray-900">Travel Blog</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogPosts.map((post) => (
-            <BlogCard
-              key={post.id}
-              title={post.title}
-              excerpt={post.excerpt}
-              slug={post.slug}
-              imageUrl={post.imageUrl}
-              author={post.author}
-              date={post.date}
-              readTime={post.readTime}
-              tags={post.tags}
-            />
+            <div key={post.id} onClick={() => openModal(post)}>
+              <BlogCard
+                title={post.title}
+                excerpt={post.excerpt}
+                slug={post.slug}
+                imageUrl={post.imageUrl}
+                author={post.author}
+                date={post.date}
+                readingTime={post.readingTime}
+                tags={post.tags}
+                onClick={() => openModal(post)} // Pass onClick handler
+              />
+            </div>
           ))}
         </div>
       </div>
+      {selectedBlog && (
+        <BlogModal
+          isOpen={!!selectedBlog}
+          onClose={closeModal}
+          blog={selectedBlog}
+        />
+      )}
     </main>
   );
 };

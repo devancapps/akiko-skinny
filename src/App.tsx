@@ -4,6 +4,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Blogs from "./pages/Blogs";
 import Resources from "./pages/Resources";
+import BlogDetails from "./pages/BlogDetails";
 import "./styles/App.css";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/blogs" element={<Blogs />} />
+          <Route path="/blog/:slug" element={<BlogDetails />} />
           <Route path="/resources" element={<Resources />} />
         </Routes>
         <Footer />
