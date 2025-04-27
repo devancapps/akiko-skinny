@@ -1,0 +1,13 @@
+name: Test Schedule Action
+
+on:
+  schedule:
+    - cron: "*/5 * * * *" # Every 5 minutes
+  workflow_dispatch: # Optional, lets you trigger manually too
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print current time
+        run: echo "🕒 The current time is $(date)"
