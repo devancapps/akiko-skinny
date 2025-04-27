@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 interface DestinationCardProps {
   city: string;
@@ -7,7 +7,12 @@ interface DestinationCardProps {
   link: string;
 }
 
-const DestinationCard = ({ city, departure, image, link }: DestinationCardProps) => {
+const DestinationCard = ({
+  city,
+  departure,
+  image,
+  link,
+}: DestinationCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -19,12 +24,14 @@ const DestinationCard = ({ city, departure, image, link }: DestinationCardProps)
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative overflow-hidden rounded-xl aspect-[4/3]">
+      <div className="relative overflow-hidden rounded-xl aspect-[4/3] w-80">
+        {" "}
+        {/* Increased width */}
         <img
           src={image}
           alt={city}
           className={`w-full h-full object-cover transition-transform duration-500 ${
-            isHovered ? 'scale-110' : ''
+            isHovered ? "scale-110" : ""
           }`}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
@@ -37,4 +44,4 @@ const DestinationCard = ({ city, departure, image, link }: DestinationCardProps)
   );
 };
 
-export default DestinationCard; 
+export default DestinationCard;
