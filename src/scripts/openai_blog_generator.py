@@ -15,6 +15,7 @@ from slugify import slugify
 from datetime import datetime
 from dotenv import load_dotenv
 from firebase_admin import credentials, firestore
+from utils import fix_blog_formatting
 
 print(f"🛠 Python version: {sys.version}")
 
@@ -76,6 +77,7 @@ def get_pexels_image(topic):
     data = response.json()
     return data["photos"][0]["src"]["large"]
 
+
 def clean_markdown_json_block(text):
     """Cleans a messy OpenAI 'JSON' block and makes it safe to parse."""
     # 1. Remove code block wrappers ```json ... ```
@@ -93,19 +95,20 @@ def clean_markdown_json_block(text):
     body_fixed = body_content.replace('\\', '\\\\')  # Escape backslashes first!
     body_fixed = body_fixed.replace('"', '\\"')       # Escape quotes
     body_fixed = body_fixed.replace('\n', '\\n')      # Escape newlines
-
+    body_fixed = fix_blog_formatting(body_fixed)
+    
     # 4. Rebuild the fixed JSON
     cleaned_fixed = re.sub(
         r'"body"\s*:\s*"([\s\S]*?)"\s*}',
         f'"body": "{body_fixed}"}}',
         cleaned
     )
-
     # 5. Parse the result
     data = json.loads(cleaned_fixed)
 
     # 6. Decode escaped newlines back into real ones
-    data["body"] = bytes(data["body"], "utf-8").decode("unicode_escape")
+    # data["body"] = bytes(data["body"], "utf-8").decode("unicode_escape")
+    # ^commented out because it was converting latin characters to other characters
 
     return {
         "title": data["title"].strip(),
