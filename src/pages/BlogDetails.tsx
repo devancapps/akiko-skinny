@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { getBlogPostBySlug, BlogPost } from "../services/blogService";
-import Markdown from "markdown-to-jsx";
 
 const BlogDetails = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -44,10 +45,21 @@ const BlogDetails = () => {
               alt={blog.title}
               className="w-full h-64 object-cover mb-4"
             />
-            <div className="prose text-left pb-4 max-w-none break-words whitespace-pre-wrap">
-              <Markdown className="text-gray-600 mb-4">{blog.excerpt}</Markdown>
+            <div className="h-auto text-left text-gray-500 max-w-none break-words mb-6">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  p: ({ node, ...props }) => (
+                    <p style={{ margin: "12px" }} {...props} />
+                  ),
+                  li: ({ node, ...props }) => (
+                    <li style={{ margin: "12px" }} {...props} />
+                  ),
+                }}
+              >
+                {blog.excerpt}
+              </ReactMarkdown>
             </div>
-            <p className="text-gray-600 mb-4 text-left">{blog.excerpt}</p>
             {blog.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {blog.tags.map((tag) => (

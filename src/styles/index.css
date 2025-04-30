@@ -131,6 +131,15 @@ h1 {
   line-height: 1.1;
 }
 
+ol {
+  list-style: decimal inside;
+  padding-left: 1.5em; /* optional for nicer spacing */
+}
+
+li {
+  margin-bottom: 0.5em; /* if you still want space between */
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;

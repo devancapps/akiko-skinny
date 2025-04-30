@@ -50,12 +50,12 @@ const BlogCard: React.FC<BlogCardProps> = ({
               <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-200">
                 {title}
               </h3>
-              <p className="text-gray-600 mb-2 line-clamp-2 overflow-hidden">
+              <p className="text-gray-600 mb-1 line-clamp-2 overflow-hidden">
                 {excerpt}
               </p>
             </div>
             {tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-auto">
+              <div className="flex flex-wrap gap-2 mt-auto mb-4">
                 {tags.map((tag) => (
                   <span
                     key={tag}
