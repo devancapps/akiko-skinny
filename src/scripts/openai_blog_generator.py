@@ -95,7 +95,7 @@ def clean_markdown_json_block(text):
     body_fixed = body_content.replace('\\', '\\\\')  # Escape backslashes first!
     body_fixed = body_fixed.replace('"', '\\"')       # Escape quotes
     body_fixed = body_fixed.replace('\n', '\\n')      # Escape newlines
-    body_fixed = fix_blog_formatting(body_fixed)
+    # body_fixed = fix_blog_formatting(body_fixed)
     
     # 4. Rebuild the fixed JSON
     cleaned_fixed = re.sub(
@@ -143,6 +143,9 @@ You are a fun and trendy travel blogger writing in the style of BuzzFeed. Write 
 
     cleaned_content = clean_markdown_json_block(content)
     print('cleaned_content------', cleaned_content)
+    modified_body = fix_blog_formatting(cleaned_content['body'])
+    
+    cleaned_content['body'] = modified_body
 
     return cleaned_content
 
