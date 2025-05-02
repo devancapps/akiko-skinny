@@ -70,40 +70,85 @@ const destinations = [
 
 const DestinationCarousel = () => {
   const carouselRef = useRef<HTMLDivElement>(null);
-  const scrollInterval = useRef<NodeJS.Timeout | null>(null);
+  const animationFrame = useRef<number | null>(null);
+  const isScrolling = useRef(false);
 
-  useEffect(() => {
-    const startAutoScroll = () => {
-      scrollInterval.current = setInterval(() => {
-        if (carouselRef.current) {
-          carouselRef.current.scrollLeft += 1;
+  const scrollSpeed = 0.8;
+
+  const startAutoScroll = () => {
+    if (animationFrame.current) return;
+    isScrolling.current = true;
+
+    const step = () => {
+      const carousel = carouselRef.current;
+      if (carousel && isScrolling.current) {
+        if (
+          carousel.scrollLeft + carousel.clientWidth >=
+          carousel.scrollWidth
+        ) {
+          carousel.scrollLeft = 0;
+        } else {
+          carousel.scrollLeft += scrollSpeed;
         }
-      }, 20); // Adjust speed as needed
-    };
-
-    const stopAutoScroll = () => {
-      if (scrollInterval.current) {
-        clearInterval(scrollInterval.current);
-        scrollInterval.current = null;
+        animationFrame.current = requestAnimationFrame(step);
       }
     };
 
+    animationFrame.current = requestAnimationFrame(step);
+  };
+
+  const stopAutoScroll = () => {
+    isScrolling.current = false;
+    if (animationFrame.current) {
+      cancelAnimationFrame(animationFrame.current);
+      animationFrame.current = null;
+    }
+  };
+
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    const isMobile = window.innerWidth <= 768;
+
+    const handleVisibility = () => {
+      if (carousel) {
+        const rect = carousel.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (inView) startAutoScroll();
+        else stopAutoScroll();
+      }
+    };
+
+    const handleTouchStart = () => stopAutoScroll();
+    const handleTouchEnd = () => {
+      setTimeout(() => startAutoScroll(), 500); // slight delay to prevent immediate conflict
+    };
     const handleMouseEnter = () => stopAutoScroll();
     const handleMouseLeave = () => startAutoScroll();
 
-    const carousel = carouselRef.current;
+    window.addEventListener("scroll", handleVisibility, { passive: true });
+    window.addEventListener("resize", handleVisibility);
     if (carousel) {
-      carousel.addEventListener("mouseenter", handleMouseEnter);
-      carousel.addEventListener("mouseleave", handleMouseLeave);
+      if (!isMobile) {
+        carousel.addEventListener("mouseenter", handleMouseEnter);
+        carousel.addEventListener("mouseleave", handleMouseLeave);
+      } else {
+        carousel.addEventListener("touchstart", handleTouchStart);
+        carousel.addEventListener("touchend", handleTouchEnd);
+      }
     }
 
-    startAutoScroll();
+    // Initial visibility check
+    handleVisibility();
 
     return () => {
       stopAutoScroll();
+      window.removeEventListener("scroll", handleVisibility);
+      window.removeEventListener("resize", handleVisibility);
       if (carousel) {
         carousel.removeEventListener("mouseenter", handleMouseEnter);
         carousel.removeEventListener("mouseleave", handleMouseLeave);
+        carousel.removeEventListener("touchstart", handleTouchStart);
+        carousel.removeEventListener("touchend", handleTouchEnd);
       }
     };
   }, []);
@@ -112,7 +157,10 @@ const DestinationCarousel = () => {
     <div
       ref={carouselRef}
       className="flex overflow-x-auto pb-4 space-x-4 scrollbar-hide"
-      style={{ scrollBehavior: "smooth" }}
+      style={{
+        scrollBehavior: "smooth",
+        WebkitOverflowScrolling: "touch",
+      }}
     >
       {destinations.map((destination) => (
         <DestinationCard key={destination.id} {...destination} />
