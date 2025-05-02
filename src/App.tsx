@@ -10,7 +10,7 @@ import "./styles/App.css";
 function App() {
   return (
     <Router>
-      <div className="min-h-screen">
+      <div className="min-h-screen min-w-screen">
         <Navigation />
         <Routes>
           <Route path="/" element={<Home />} />
