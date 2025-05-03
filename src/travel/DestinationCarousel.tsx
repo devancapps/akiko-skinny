@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import DestinationCard from "./DestinationCard";
 
 const destinations = [
@@ -70,101 +70,119 @@ const destinations = [
 
 const DestinationCarousel = () => {
   const carouselRef = useRef<HTMLDivElement>(null);
-  const animationFrame = useRef<number | null>(null);
-  const isScrolling = useRef(false);
-
-  const scrollSpeed = 0.8;
+  const scrollInterval = useRef<NodeJS.Timeout | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [showSwipeHint, setShowSwipeHint] = useState(true);
 
   const startAutoScroll = () => {
-    if (animationFrame.current) return;
-    isScrolling.current = true;
-
-    const step = () => {
-      const carousel = carouselRef.current;
-      if (carousel && isScrolling.current) {
-        if (
-          carousel.scrollLeft + carousel.clientWidth >=
-          carousel.scrollWidth
-        ) {
-          carousel.scrollLeft = 0;
-        } else {
-          carousel.scrollLeft += scrollSpeed;
-        }
-        animationFrame.current = requestAnimationFrame(step);
+    if (scrollInterval.current || !carouselRef.current) return;
+    scrollInterval.current = setInterval(() => {
+      const carousel = carouselRef.current!;
+      if (
+        carousel.scrollLeft + carousel.clientWidth >=
+        carousel.scrollWidth - 1
+      ) {
+        carousel.scrollLeft = 0;
+      } else {
+        carousel.scrollLeft += 2;
       }
-    };
-
-    animationFrame.current = requestAnimationFrame(step);
+    }, 20);
   };
 
   const stopAutoScroll = () => {
-    isScrolling.current = false;
-    if (animationFrame.current) {
-      cancelAnimationFrame(animationFrame.current);
-      animationFrame.current = null;
+    if (scrollInterval.current) {
+      clearInterval(scrollInterval.current);
+      scrollInterval.current = null;
     }
   };
 
   useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
     const carousel = carouselRef.current;
-    const isMobile = window.innerWidth <= 768;
+    if (!carousel) return;
 
-    const handleVisibility = () => {
-      if (carousel) {
-        const rect = carousel.getBoundingClientRect();
-        const inView = rect.top < window.innerHeight && rect.bottom > 0;
-        if (inView) startAutoScroll();
-        else stopAutoScroll();
+    const handleTouchStart = () => {
+      if (isMobile) {
+        stopAutoScroll();
+        setShowSwipeHint(false);
       }
     };
 
-    const handleTouchStart = () => stopAutoScroll();
-    const handleTouchEnd = () => {
-      setTimeout(() => startAutoScroll(), 500); // slight delay to prevent immediate conflict
+    const handleMouseEnter = () => {
+      if (!isMobile) stopAutoScroll();
     };
-    const handleMouseEnter = () => stopAutoScroll();
-    const handleMouseLeave = () => startAutoScroll();
+    const handleMouseLeave = () => {
+      if (!isMobile) startAutoScroll();
+    };
 
-    window.addEventListener("scroll", handleVisibility, { passive: true });
-    window.addEventListener("resize", handleVisibility);
-    if (carousel) {
-      if (!isMobile) {
-        carousel.addEventListener("mouseenter", handleMouseEnter);
-        carousel.addEventListener("mouseleave", handleMouseLeave);
-      } else {
-        carousel.addEventListener("touchstart", handleTouchStart);
-        carousel.addEventListener("touchend", handleTouchEnd);
-      }
+    // Intersection observer for desktop
+    if (!isMobile) {
+      observerRef.current = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            startAutoScroll();
+          } else {
+            stopAutoScroll();
+          }
+        },
+        { threshold: 0.1 }
+      );
+      observerRef.current.observe(carousel);
+    } else {
+      stopAutoScroll(); // Ensure no auto-scroll on mobile
     }
 
-    // Initial visibility check
-    handleVisibility();
+    carousel.addEventListener("mouseenter", handleMouseEnter);
+    carousel.addEventListener("mouseleave", handleMouseLeave);
+    carousel.addEventListener("touchstart", handleTouchStart, {
+      passive: true,
+    });
 
     return () => {
       stopAutoScroll();
-      window.removeEventListener("scroll", handleVisibility);
-      window.removeEventListener("resize", handleVisibility);
-      if (carousel) {
-        carousel.removeEventListener("mouseenter", handleMouseEnter);
-        carousel.removeEventListener("mouseleave", handleMouseLeave);
-        carousel.removeEventListener("touchstart", handleTouchStart);
-        carousel.removeEventListener("touchend", handleTouchEnd);
-      }
+      observerRef.current?.disconnect();
+      carousel.removeEventListener("mouseenter", handleMouseEnter);
+      carousel.removeEventListener("mouseleave", handleMouseLeave);
+      carousel.removeEventListener("touchstart", handleTouchStart);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
-    <div
-      ref={carouselRef}
-      className="flex overflow-x-auto pb-4 space-x-4 scrollbar-hide"
-      style={{
-        scrollBehavior: "smooth",
-        WebkitOverflowScrolling: "touch",
-      }}
-    >
-      {destinations.map((destination) => (
-        <DestinationCard key={destination.id} {...destination} />
-      ))}
+    <div className="relative">
+      {isMobile && showSwipeHint && (
+        <div className="absolute z-10 top-1/2 right-2 transform -translate-y-1/2 bg-black bg-opacity-40 text-white text-xs px-2 py-1 rounded-full animate-pulse pointer-events-none">
+          Swipe →
+        </div>
+      )}
+      <div
+        ref={carouselRef}
+        className={`flex overflow-x-auto pb-4 space-x-4 scrollbar-hide ${
+          isMobile ? "snap-x snap-mandatory" : ""
+        }`}
+        style={{
+          scrollBehavior: "smooth",
+          WebkitOverflowScrolling: "touch",
+          touchAction: "pan-x",
+        }}
+      >
+        {destinations.map((destination) => (
+          <div
+            key={destination.id}
+            className={`${isMobile ? "snap-start" : ""} shrink-0`}
+          >
+            <DestinationCard {...destination} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
