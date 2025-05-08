@@ -119,22 +119,29 @@ def generate_blog_post(topic):
     client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     prompt = f"""
-You are a fun and trendy travel blogger writing in the style of BuzzFeed. Write a current blog post about: {topic}.
+You are an expert travel blogger and SEO strategist.
 
-- The post should be ~300 words.
-- Your entire response must be valid JSON with two keys: "title" and "body".
-- Title should be catchy and relevant to the topic.
-- The body should be written in Markdown and should NOT contain the title.
-- Escape all line breaks as "\\n" inside the "body" field.
-- Do not include any unescaped raw newlines inside the JSON fields.
-- Wrap the JSON output inside a Markdown-style code block like ```json ... ```.
+Write a high-quality, SEO-optimized blog post about: {topic}
+
+- Use Google-style trending long-tail keywords related to this topic. Incorporate them naturally into the content.
+- Write ~1300 words.
+- Structure the post with clear Markdown formatting, including relevant headings (##) and bullet points where useful.
+- Use external linking.
+- Use an engaging tone similar to top-ranking travel blogs like Nomadic Matt or The Blonde Abroad.
+- The entire response must be valid **JSON** with exactly two keys: "title" and "body".
+- The "title" must be catchy and relevant to the topic.
+- The "body" must be written in **Markdown** and must NOT contain the title.
+- Escape all newlines as `\\n` inside the "body" field.
+- Do NOT include any unescaped raw newlines inside JSON fields.
+- Wrap the entire JSON in a Markdown-style code block like: ```json ... ```
 """
+
 
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
-        temperature=0.8,
-        max_tokens=1100
+        temperature=0.7,
+        max_tokens=2000
     )
 
     print('OPENAIresponse------')
